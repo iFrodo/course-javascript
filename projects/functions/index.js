@@ -13,9 +13,6 @@
  Другими словами: функция должна возвращать в неизменном виде то, что поступает ей на вход
  */
 function returnFirstArgument(a) {
-  if (a === typeof 'number') {
-    return (a = Number());
-  }
   return a;
 }
 returnFirstArgument('ls');

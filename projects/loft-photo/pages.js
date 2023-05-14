@@ -7,7 +7,7 @@ let page;
 export default {
   openPage(name) {
     const currentClass = pagesMap[name];
-    let element = document.querySelector(currentClass);
+    const element = document.querySelector(currentClass);
     page?.classList.add('hidden');
     page = element;
     page.classList.remove('hidden');

@@ -67,9 +67,10 @@ export default {
   },
 
   callApi(method, params) {
-    params.v = params.v || 5.12;
-    return new Promise(resolve, (reject) => {
-      VK.Api(method, params, (response) => {
+    params.v = params.v || 5.131;
+
+    return new Promise(resolve, reject => {
+      VK.api(method, params, (response) => {
         if (response.error) {
           reject(new Error(response.error.error_msg));
         } else {

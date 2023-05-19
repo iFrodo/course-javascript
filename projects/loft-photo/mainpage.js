@@ -3,7 +3,7 @@ import model from './model';
 
 export default {
   async getNextPhoto() {
-    const { friend, id, url } = await model.getNextPhoto();
+    const {friend, id, url} = await model.getNextPhoto();
     this.setFriendAndPhoto(friend, id, url);
   },
 

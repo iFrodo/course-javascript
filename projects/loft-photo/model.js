@@ -48,6 +48,7 @@ export default {
   async init() {
     this.photoCache = {};
     this.friends = await this.getFriends();
+    [this.me] = await this.getUsers();
   },
   login() {
     return new Promise((resolve, reject) => {
@@ -64,7 +65,15 @@ export default {
       }, PERM_FRIENDS | PERM_PHOTOS);
     });
   },
+  logout() {},
 
+  getUsers(ids) {
+    const params = { fields: ['photo_50, photo_100'] };
+    if (ids) {
+      params.user_ids = ids;
+    }
+    return this.callApi('users.get', params);
+  },
   callApi(method, params) {
     params.v = params.v || 5.131;
 

@@ -19,13 +19,7 @@ const PERM_FRIENDS = 2;
 const PERM_PHOTOS = 4;
 
 export default {
-
-
- async getRandomElement(e) {
-
-
-
-
+  async getRandomElement(e) {
     if (!e.length) {
       return null;
     }
@@ -40,7 +34,6 @@ export default {
     return { friend, id: photo.id, url: size.url };
   },
   findSize(photo) {
-
     const size = photo.sizes.find((size) => size.width >= 360);
     // if (!size) {
     //   return photo.sizes.reduce((biggest, current) => {
@@ -53,10 +46,8 @@ export default {
     return size;
   },
   async init() {
-    
     this.photoCache = {};
     this.friends = await this.getFriends();
-
   },
   login() {
     return new Promise((resolve, reject) => {
@@ -74,12 +65,11 @@ export default {
     });
   },
 
- callApi(method, params) {
+  callApi(method, params) {
     params.v = params.v || 5.131;
 
     return new Promise((resolve, reject) => {
       VK.api(method, params, (response) => {
-      
         if (response.error) {
           reject(new Error(response.error.error_msg));
         } else {
@@ -88,7 +78,6 @@ export default {
       });
     });
   },
-
 
   getFriends() {
     const params = {
@@ -99,7 +88,6 @@ export default {
   },
 
   getPhotos(owner) {
-
     const params = { owner_id: owner };
     return this.callApi('photos.getAll', params);
   },
@@ -115,5 +103,4 @@ export default {
 
     return photos;
   },
-
 };

@@ -1,26 +1,47 @@
-
 import model from './model';
 import profilePage from './profilepage';
 import pages from './pages';
 
+import commentsTemplate from './commentsTemplate.html.hbs';
+
 export default {
   async getNextPhoto() {
     const { friend, id, url } = await model.getNextPhoto();
-    this.setFriendAndPhoto(friend, id, url);
+    const stats = await model.photoStats(id);
+    this.setFriendAndPhoto(friend, id, url, stats);
   },
 
-  setFriendAndPhoto(friend, id, url) {
+  setFriendAndPhoto(friend, id, url, stats) {
     const photoComp = document.querySelector('.component-photo');
     const headerPhotoComp = document.querySelector('.component-header-photo');
     const headerNameComp = document.querySelector('.component-header-name');
     const footerPhotoComp = document.querySelector('.component-footer-photo');
 
     this.friend = friend;
+    this.photoId = id;
 
     headerPhotoComp.style.backgroundImage = `url('${friend.photo_50}')`;
     headerNameComp.innerText = `${friend.first_name ?? ''} ${friend.last_name ?? ''}`;
     photoComp.style.backgroundImage = `url(${url})`;
     footerPhotoComp.style.backgroundImage = `url('${model.me.photo_50}')`;
+    this.setLikes(stats.likes, stats.liked);
+    this.setComments(stats.comments);
+  },
+  setLikes(total, liked) {
+    const likes = document.querySelector('.component-footer-container-social-likes');
+    likes.innerText = total;
+    if (liked) {
+      likes.classList.add('liked');
+    } else {
+      likes.classList.remove('liked');
+    }
+  },
+
+  setComments(total) {
+    const comments = document.querySelector(
+      '.component-footer-container-social-comments'
+    );
+    comments.innerText = total;
   },
 
   handleEvents() {
@@ -49,5 +70,47 @@ export default {
         await profilePage.setUser(model.me);
         pages.openPage('profile');
       });
+    document
+      .querySelector('.component-footer-container-social-likes')
+      .addEventListener('click', async () => {
+        const { likes, liked } = await model.like(this.photoId);
+        this.setLikes(likes, liked);
+      });
+    document
+      .querySelector('.component-footer-container-social-comments')
+      .addEventListener('click', async () => {
+        document.querySelector('.component-comments').classList.remove('hidden');
+        await this.loadComments(this.photoId);
+      });
+    const input = document.querySelector('.component-comments-container-form-input');
+    document.querySelector('.component-comments').addEventListener('click', async (e) => {
+      if (e.target === e.currentTarget) {
+        document.querySelector('.component-comments').classList.add('hidden');
+      }
+    });
+    document
+      .querySelector('.component-comments-container-form-send')
+      .addEventListener('click', async () => {
+        if (input.value.trim().length) {
+          await model.postComment(this.photoId, input.value.trim());
+          input.value = '';
+          await this.loadComments(this.photoId);
+        }
+      });
+  },
+  async loadComments(photo) {
+    const comments = await model.getComments(photo);
+    const commentsElements = commentsTemplate({
+      list: comments.map((comment) => {
+        return {
+          name: `${comment.user.first_name ?? ''} ${comment.user.last_name ?? ''}`,
+          photo: comment.user.photo_50,
+          text: comment.text,
+        };
+      }),
+    });
+    document.querySelector('.component-comments-container-list').innerHTML = '';
+    document.querySelector('.component-comments-container-list').append(commentsElements);
+    this.setComments(comments.length);
   },
 };

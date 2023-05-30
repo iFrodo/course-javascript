@@ -2,7 +2,6 @@ import model from './model';
 import mainPage from './mainpage';
 import pages from './pages';
 
-
 export default {
   async setUser(user) {
     const photoComp = document.querySelector('.component-user-info-photo');
@@ -16,7 +15,7 @@ export default {
 
     for (const photo of photos.items) {
       const size = model.findSize(photo);
-      console.log(size);
+
       const element = document.createElement('div');
       element.classList.add('component-user-photo');
       element.dataset.id = photo.id;
@@ -34,7 +33,9 @@ export default {
           const friendsPhotos = await model.getPhotos(this.user.id);
           const photo = friendsPhotos.items.find((photo) => photo.id == photoId);
           const size = model.findSize(photo);
-          mainPage.setFriendAndPhoto(this.user, parseInt(photoId), size.url);
+          const stats = await model.photoStats(this.user.id);
+          mainPage.setFriendAndPhoto(this.user, parseInt(photoId), size.url, stats);
+
           pages.openPage('main');
         }
       });

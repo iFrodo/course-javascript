@@ -81,10 +81,10 @@ export default {
         photosComp.classList.remove('hidden');
         friendsComp.classList.add('hidden');
 
-        localStorage.setItem('loft-photo-profile-node','1');
-        this.showPhotos()
+        localStorage.setItem('loft-photo-profile-node', '1');
+        this.showPhotos();
       });
-      document
+    document
       .querySelector('.component-profile-node-friends')
       .addEventListener('click', (e) => {
         const photosComp = document.querySelector('.component-user-photos');
@@ -92,25 +92,23 @@ export default {
         photosComp.classList.add('hidden');
         friendsComp.classList.remove('hidden');
 
-        localStorage.setItem('loft-photo-profile-node','1');
-        this.showFriends()
+        localStorage.setItem('loft-photo-profile-node', '1');
+        this.showFriends();
       });
-      document.querySelector('.component-user-friends')
-      .addEventListener('click',async (e)=>{
-        const friendId = e.target.dataset.id
-        if(friendId){
+    document
+      .querySelector('.component-user-friends')
+      .addEventListener('click', async (e) => {
+        const friendId = e.target.dataset.id;
+        if (friendId) {
           const [friend] = await model.getUsers([friendId]);
-          const friendsPhotos = await model.getPhotos(friendId)
-          const photo = await model.getRandomElement(friendsPhotos.items)
+          const friendsPhotos = await model.getPhotos(friendId);
+          const photo = await model.getRandomElement(friendsPhotos.items);
           const size = await model.findSize(photo);
-          const photoStats = await model.photoStats(photo.id)
-          mainPage.setFriendAndPhoto(friend,parseInt(photo.id),size.url,photoStats)
-          pages.openPage('main')
+          const photoStats = await model.photoStats(photo.id);
+          mainPage.setFriendAndPhoto(friend, parseInt(photo.id), size.url, photoStats);
+          pages.openPage('main');
         }
-
-
-  
-      })
+      });
     document.querySelector('.page-profile-back').addEventListener('click', async () => {
       await pages.openPage('main');
     });

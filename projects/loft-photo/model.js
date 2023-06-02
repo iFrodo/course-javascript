@@ -34,6 +34,7 @@ export default {
     return { friend, id: photo.id, url: size.url };
   },
   findSize(photo) {
+
     const size = photo.sizes.find((size) => size.width >= 360);
     // if (!size) {
     //   return photo.sizes.reduce((biggest, current) => {
@@ -53,7 +54,7 @@ export default {
   login() {
     return new Promise((resolve, reject) => {
       VK.init({
-        apiId: 51661177,
+        apiId: 51643234,
       });
       VK.Auth.login((response) => {
         if (response.session) {
@@ -143,6 +144,7 @@ export default {
   },
 
   async photoStats(photo) {
+   
     return this.callServer('photoStats', { photo });
   },
 

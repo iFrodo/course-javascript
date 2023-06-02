@@ -24,6 +24,7 @@ const methods = {
     return { likes: photoLikes.size, liked: true };
   },
   photoStats(req, res, url, vkUser) {
+ 
     const photoId = url.searchParams.get('photo');
     const photoLikes = DB.likes.get(photoId);
     const photoComments = DB.comments.get(photoId);

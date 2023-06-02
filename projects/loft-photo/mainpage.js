@@ -62,6 +62,7 @@ export default {
       .querySelector('.component-header-profile-link')
       .addEventListener('click', async () => {
         await profilePage.setUser(this.friend);
+
         pages.openPage('profile');
       });
     document
